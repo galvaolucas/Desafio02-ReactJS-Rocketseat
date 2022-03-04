@@ -33,6 +33,13 @@ export function SideBar() {
   }
 
   useEffect(() => {
+        api.get<GenreResponseProps[]>('genres').then(response => {
+      setGenres(response.data);
+    })
+  }, []);
+  
+
+  useEffect(() => {
     api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
       setMovies(response.data);
     });
