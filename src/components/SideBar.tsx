@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
 import { Button } from "./Button";
-import { api } from "../services/api"
+import { useState , useEffect } from "react";
+
+import { api } from "../services/api";
 
 import "../styles/sidebar.scss";
 
@@ -10,44 +11,21 @@ interface GenreResponseProps {
   title: string;
 }
 
-interface MovieProps {
-  imdbID: string;
-  Title: string;
-  Poster: string;
-  Ratings: Array<{
-    Source: string;
-    Value: string;
-  }>;
-  Runtime: string;
+interface SideBarProps {
+  selectedGenreId: number;
+  handleClickButton: (id : number) => void,
 }
 
-export function SideBar() {
-  // Complete aqui
-  const [selectedGenreId, setSelectedGenreId] = useState(1);
-  const [selectedGenre, setSelectedGenre] = useState<GenreResponseProps>({} as GenreResponseProps);
+export function SideBar({ selectedGenreId , handleClickButton } : SideBarProps) {
+
   const [genres, setGenres] = useState<GenreResponseProps[]>([]);
-  const [movies, setMovies] = useState<MovieProps[]>([]);
-
-  function handleClickButton(id: number) {
-    setSelectedGenreId(id);
-  }
 
   useEffect(() => {
-        api.get<GenreResponseProps[]>('genres').then(response => {
-      setGenres(response.data);
-    })
-  }, []);
-  
+    api.get<GenreResponseProps[]>('genres').then(response => {
+  setGenres(response.data);
+})
+}, []);
 
-  useEffect(() => {
-    api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
-      setMovies(response.data);
-    });
-
-    api.get<GenreResponseProps>(`genres/${selectedGenreId}`).then(response => {
-      setSelectedGenre(response.data);
-    })
-  }, [selectedGenreId]);
 
   return (
   <nav className="sidebar">
